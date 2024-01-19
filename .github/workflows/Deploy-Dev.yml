@@ -1,0 +1,99 @@
+# This workflow will build and push a node.js application to an Azure Web App when a commit is pushed to your default branch.
+#
+# This workflow assumes you have already created the target Azure App Service web app.
+# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-nodejs?tabs=linux&pivots=development-environment-cli
+#
+# To configure this workflow:
+#
+# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
+#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
+#
+# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
+#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
+#
+# 3. Change the value for the AZURE_WEBAPP_NAME. Optionally, change the AZURE_WEBAPP_PACKAGE_PATH and NODE_VERSION environment variables below.
+#
+# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
+# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
+name: Continuous Integration - Dev
+on:
+  push:
+    branches: [ "dev" ]
+  workflow_dispatch:
+
+env:
+  AZURE_WEBAPP_NAME: ApiaryDev-Apiary    # set this to your application's name
+  AZURE_WEBAPP_PACKAGE_PATH: '.'      # set this to the path to your web app project, defaults to the repository root
+  NODE_VERSION: '16.x'                # set this to the node version to use
+  PORT: 3000
+  REACT_APP_BASE_URL: 'https://apiarydev-apiary.azurewebsites.net/'
+  REACT_APP_ARCGIS_URL: 'https://apiarydev-iarcgis.azurewebsites.net/api'
+  REACT_APP_ARCGIS_KEY: 'api://c6c7524e-68a4-4333-9cc2-28b173ab170f/.default'
+  REACT_APP_CITYWORKS_URL: 'https://apiarydev-cityworks.azurewebsites.net/api'
+  REACT_APP_CITYWORKS_KEY: 'api://0c1991a0-7b71-4cf3-802f-a1fd94f645fd/.default'
+  REACT_APP_DESK365_URL: "https://apps.desk365.io/apis"
+  REACT_APP_DESK365_TOKEN: "a533a7558ff55831e4120a3de2b75b55"
+  REACT_APP_DYNAMICS_URL: 'https://apiarydev-dynamics.azurewebsites.net/api'
+  REACT_APP_DYNAMICS_KEY: 'api://932c1ba6-9886-458a-b58a-9d2045e1a07d/.default'
+  REACT_APP_GRAPH_URL: 'https://apiarydev-graph.azurewebsites.net/api'
+  REACT_APP_GRAPH_KEY: 'api://68896885-7247-412d-81d9-1082f4eed2cf/.default'
+  REACT_APP_ICOMMS_URL: 'https://apiarydev-comms.azurewebsites.net/api'
+  REACT_APP_ICOMMS_KEY: 'api://28a29096-a828-4d25-872e-3bfa0d0bde25/.default'
+  REACT_APP_MSAL_AUTHORITY: 'https://login.microsoftonline.com/ebba2929-765b-48f7-8c03-9b450ed099ba'
+  REACT_APP_MSAL_CLIENTID: '446e7bfb-90f0-4a9f-af5b-16b1e0bdb05d'
+  REACT_APP_SPRINGBROOK_URL: 'https://apiarydev-springbrook.azurewebsites.net/api'
+  REACT_APP_SPRINGBROOK_KEY: 'api://6310bd84-d7d2-41ea-a56e-d7ff17a88ff1/.default'
+  REACT_APP_SPRYCIS_URL: 'https://apiarydev-sprycis.azurewebsites.net/api' 
+  REACT_APP_SPRYCIS_KEY: 'api://03b456bd-f6e8-409b-af01-b71826a351af/.default'
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+ 
+
+    - name: npm install, build, and test
+      run: |
+        npm install --legacy-peer-deps
+        npm run build --if-present
+       
+
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v3
+      with:
+        name: node-app
+        path: build
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Development'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v3
+      with:
+        name: node-app
+
+    - name: 'Deploy to Azure WebApp'
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}

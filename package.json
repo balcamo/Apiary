@@ -1,0 +1,39 @@
+{
+  "name": "apiaryreacthomepage",
+  "version": "0.3.0",
+  "private": true,
+  "dependencies": {
+    "@arcgis/core": "^4.25.0",
+    "@azure/msal-browser": "^2.11.2",
+    "@octokit/core": "^5.0.1",
+    "@popperjs/core": "^2.11.6",
+    "jquery": "^3.5.1",
+    "jquery-ui-bundle": "^1.12.1-migrate",
+    "mdb-react-ui-kit": "git+https://oauth2:tjy__Qvnsq_wD6xy9uex@git.mdbootstrap.com/mdb/react/mdb5/prd/mdb5-react-ui-kit-pro-advanced",
+    "patch-package": "^7.0.0",
+    "react": "^18.1.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.1.0",
+    "react-json-tree": "^0.18.0",
+    "react-paginate": "^8.1.4",
+    "react-router-dom": "^6.6.2",
+    "react-scripts": "^5.0.0",
+    "rsuite": "^5.30.0",
+    "web-vitals": "^0.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "CI=false && react-scripts build",
+    "postinstall": "patch-package",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ]
+}

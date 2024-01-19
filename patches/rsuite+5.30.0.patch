@@ -1,0 +1,13 @@
+diff --git a/node_modules/rsuite/cjs/@types/common.d.ts b/node_modules/rsuite/cjs/@types/common.d.ts
+index 4472c47..c1d9d72 100644
+--- a/node_modules/rsuite/cjs/@types/common.d.ts
++++ b/node_modules/rsuite/cjs/@types/common.d.ts
+@@ -134,7 +134,7 @@ export interface SVGIcon {
+     viewBox: string;
+     id: string;
+ }
+-export interface ItemDataType<T = number | string> extends Record<string, any> {
++export interface ItemDataType<T = number | string | object | array> extends Record<string, any> {
+     label?: string | React.ReactNode;
+     value?: T;
+     groupBy?: string;

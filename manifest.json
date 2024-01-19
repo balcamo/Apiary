@@ -1,0 +1,9 @@
+{
+  "short_name": "Apiary",
+  "name": "Create React App Sample",
+  "icons": [],
+  "start_url": "https://apiarydev-react-homepage.azurewebsites.net/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
